@@ -16,22 +16,24 @@ def validaToken():
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
+    path_token='/home/joaovsdo/.ssh/token.json'
+    path_creds='/home/joaovsdo/.ssh/credentials.json'
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if os.path.exists(path_token):
+        creds = Credentials.from_authorized_user_file(path_token, SCOPES)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                path_creds, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.json', 'w') as token:
+        with open(path_token, 'w') as token:
             token.write(creds.to_json())
     # Check if the token is still not valid after attempting to refresh
     if not creds or not creds.valid:
